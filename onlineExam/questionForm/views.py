@@ -12,7 +12,7 @@ import string
 
 # Create your views here.
 
-def index(request):
+def index(request): #TODO:only teacher
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
     forms = Form.objects.filter(creator = request.user)
@@ -430,17 +430,24 @@ def feedback(request, code):
             return JsonResponse({'message': "Success"})
 
 def view_form(request, code):
-    formInfo = Form.objects.filter(code = code)
-    #Checking if form exists
-    if formInfo.count() == 0:
-        return HttpResponseRedirect(reverse('404'))
-    else: formInfo = formInfo[0]
-    if formInfo.authenticated_responder:
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse("login"))
-    return render(request, "questionForm/view_form.html", {
-        "form": formInfo
-    })
+   
+    if request.user.is_authenticated:
+        formInfo = Form.objects.filter(code = code)
+        #Checking if form exists
+        if formInfo.count() == 0:
+            return HttpResponseRedirect(reverse('404'))
+        else: formInfo = formInfo[0]
+        if formInfo.authenticated_responder: #TODO
+           
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse("login"))
+
+        return render(request, "questionForm/view_form.html", {
+            "form": formInfo
+        })
+    else:
+        return HttpResponseRedirect(reverse("login"))
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
