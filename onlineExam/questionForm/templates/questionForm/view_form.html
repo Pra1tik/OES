@@ -28,8 +28,8 @@
             <h1 class="question-title txtClr">{{question.question}} {% if question.required %}<span class="require-star">*</span>{% endif %}</h1>
             {% if question.question_type == "short" %}
                 <input type="text" name="{{question.id}}" class="short-answer" placeholder = "Your answer" {% if question.required %} required {% endif %}>
-            {% elif question.question_type == "paragraph" %}
-                <textarea name="{{question.id}}" placeholder="Your answer" class="long-answer textarea-adjust" {% if question.required %} required {% endif %}></textarea>
+            <!-- {% elif question.question_type == "paragraph" %}
+                <textarea name="{{question.id}}" placeholder="Your answer" class="long-answer textarea-adjust" {% if question.required %} required {% endif %}></textarea> -->
             {% elif question.question_type == "multiple choice" %}
                 {% for choice in question.choices.all %}
                 <div class="multiple-choice">
@@ -37,14 +37,14 @@
                     <label for="{{choice.id}}" class="txtClr">{{choice.choice}}</label>
                 </div>
                 {% endfor %}
-            {% elif question.question_type == "checkbox" %}
+            <!-- {% elif question.question_type == "checkbox" %}
             {% for choice in question.choices.all %}
                 <div class="multiple-choice">
                     <input type="checkbox" name="{{question.id}}" id="{{choice.id}}" {% if question.required %} required {% endif %} value="{{choice.id}}">
                     <label for="{{choice.id}}" class="txtClr">{{choice.choice}}</label>
                 </div>
                 {% endfor %}
-            {% endif %}
+            {% endif %} -->
         </div>
         {% endfor %}
         <div class="margin-top-bottom">
