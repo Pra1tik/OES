@@ -44,7 +44,7 @@ body{
 
 #welcome-message p{
     font-size: 16px;
-    color: rgb(0, 0, 0);
+    color: rgb(97, 98, 105);
     font-weight: 300;
 }
 
@@ -67,7 +67,7 @@ body{
 }
 
 .form-field input[type='submit']{
-    background-color: rgb(120, 127, 156);
+    background-color: rgb(75, 93, 172);
     border:none;
     color: #fff;
 }
