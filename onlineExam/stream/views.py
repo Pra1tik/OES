@@ -12,15 +12,15 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def lobby(request):
-    return render(request, 'base/lobby.html')
+    return render(request, 'stream/lobby.html')
 
 def room(request):
-    return render(request, 'base/room.html')
+    return render(request, 'stream/room.html')
 
 
 def getToken(request):
-    appId = "YOUR APP ID"
-    appCertificate = "YOUR APP CERTIFICATE"
+    appId = "8ff7bccb012e496e9d308f03fb9faabb"
+    appCertificate = "3975aaba5aed4bccbc6e1ad6f81c8f66"
     channelName = request.GET.get('channel')
     uid = random.randint(1, 230)
     expirationTimeInSeconds = 3600
@@ -41,7 +41,6 @@ def createMember(request):
         uid=data['UID'],
         room_name=data['room_name']
     )
-
     return JsonResponse({'name':data['name']}, safe=False)
 
 
