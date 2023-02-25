@@ -1,3 +1,5 @@
 onlineExam/__pycache__
 onlineExam/*/__pycache__
 onlineExam/*/*/__pycache__
+onlineExam/db.sqlite3
+onlineExam/*/migrations
