@@ -1,11 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.db import IntegrityError
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
-from users.models import User, Student, Teacher
 from .models import Choices, Questions, Answer, Form, Responses
-from django.core import serializers
 import json
 import random
 import string
@@ -18,8 +14,8 @@ def index(request): #TODO:only teacher
 
     if request.user.isStudent:
         forms = Form.objects.all()
-        return render(request, "questionForm/studentHome.html", {
-            "forms": forms
+        return render(request, "stream/lobby.html", {
+            "usr_name": request.user.username
         })
 
     if request.user.isTeacher:
@@ -102,40 +98,6 @@ def edit_description(request, code):
         formInfo.description = data["description"]
         formInfo.save()
         return JsonResponse({"message": "Success", "description": formInfo.description})
-
-# def edit_bg_color(request, code):
-#     if not request.user.is_authenticated and not request.user.isTeacher:
-#         return HttpResponseRedirect(reverse("login"))
-#     formInfo = Form.objects.filter(code = code)
-#     #Checking if form exists
-#     if formInfo.count() == 0:
-#         return HttpResponseRedirect(reverse("404"))
-#     else: formInfo = formInfo[0]
-#     #Checking if form creator is user
-#     if formInfo.creator != request.user:
-#         return HttpResponseRedirect(reverse("403"))
-#     if request.method == "POST":
-#         data = json.loads(request.body)
-#         formInfo.background_color = data["bgColor"]
-#         formInfo.save()
-#         return JsonResponse({"message": "Success", "bgColor": formInfo.background_color})
-
-# def edit_text_color(request, code):
-#     if not request.user.is_authenticated and not request.user.isTeacher:
-#         return HttpResponseRedirect(reverse("login"))
-#     formInfo = Form.objects.filter(code = code)
-#     #Checking if form exists
-#     if formInfo.count() == 0:
-#         return HttpResponseRedirect(reverse("404"))
-#     else: formInfo = formInfo[0]
-#     #Checking if form creator is user
-#     if formInfo.creator != request.user:
-#         return HttpResponseRedirect(reverse("403"))
-#     if request.method == "POST":
-#         data = json.loads(request.body)
-#         formInfo.text_color = data["textColor"]
-#         formInfo.save()
-#         return JsonResponse({"message": "Success", "textColor": formInfo.text_color})
 
 def edit_setting(request, code):
     if not request.user.is_authenticated or not request.user.isTeacher:

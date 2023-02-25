@@ -6,28 +6,22 @@
 
     <section id="form-container">
 
-        <img id="logo" src="{% static 'images/chat-icon.png' %}"/>
-
         <div id="welcome-message">
             <h1>ExamHall</h1>
-            <p>Please enter your name and roomname provided to join ExamHall</p>
+            <p>Please enter ExamHall name provided</p>
         </div>
-
+        <div class = 'name-class' id = "name" data-value="{{usr_name}}"> </div>
         <form id="form">
             <div class="field-wrapper">
 
                 <div class="form-field">
                     <label>Room:</label>
-                    <input name="room" placeholder="Enter a room name..."  style="text-transform:uppercase"/>
+                    <input name="room" placeholder="Enter exam room name provided" />
                 </div>
+            
 
                 <div class="form-field">
-                    <label>Name:</label>
-                    <input name="name" placeholder="Enter your name..."  style="text-transform:uppercase"/>
-                </div>
-
-                <div class="form-field">
-                    <input type="submit" value="Join Stream" />
+                    <input type="submit" value="Join" />
                 </div>
             </div>
         </form>
@@ -36,11 +30,11 @@
 
 <script>
     let form = document.getElementById('form')
-
+    let uname = document.getElementById('name')
     let handleSubmit = async (e) => {
         e.preventDefault()
         let room = e.target.room.value.toUpperCase()
-        let name = e.target.name.value
+        let name = uname.getAttribute('data-value')
 
         let response = await fetch(`/get_token/?channel=${room}`)
         let data = await response.json()
