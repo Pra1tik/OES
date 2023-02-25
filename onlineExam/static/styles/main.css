@@ -7,7 +7,7 @@
   }
 
 body{
-    background-color: rgba(232,233,239,1);
+    background-color: rgb(174, 174, 172);
     font-family: 'Roboto', sans-serif;
 }
 
@@ -17,7 +17,7 @@ body{
 #form-container{
     width: 400px;
     box-shadow:var(--shaddow);
-    background-color: #fff;
+    background-color: #ffffff;
     padding: 30px;
     border-radius: 5px;
     position: fixed;
@@ -67,7 +67,7 @@ body{
 }
 
 .form-field input[type='submit']{
-    background-color: rgb(75, 93, 172);
+    background-color: rgb(39, 147, 81);
     border:none;
     color: #fff;
 }
@@ -165,5 +165,5 @@ body{
 }
 
 #leave-btn{
-    background-color: rgb(255, 80, 80, 1);
+    background-color: rgb(255, 254, 254);
 }

@@ -1,8 +1,11 @@
 {% extends 'users/base.html' %}
+{% load static %}
+
 
 {% load crispy_forms_tags %}
 
 {% block content %}
+<link rel='stylesheet' type='text/css' media='screen' href="{% static 'users/loginbox.css' %}">
   {% if form.non_field_errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       {% for error in form.non_field_errors %}
@@ -13,6 +16,8 @@
       </button>
     </div>
   {% endif %}
+  <div class="loginbox">
+  <div class="inbox">
   <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-8 col-12">
       <h2>Log in</h2>
@@ -23,12 +28,15 @@
         {{ form.password|as_crispy_field }}
         <button type="submit" class="btn btn-primary">Log in</button>
       </form>
+    
 
         <small class="text-muted">
         Create an Account? <a class="ml-2" href="{% url 'register' %}">Register</a>
        </small>
     
     </div>
+  </div>
+  </div>
   </div>
 {% endblock %}
 
