@@ -30,9 +30,13 @@
             <span class="col-4 navigation active">Questions</span>
             <span class="col-4 navigation score"><a href = "{% url 'score' form.code %}" class="link">Scores</a></span>
             <span class="col-4 navigation"><a href = "{% url 'responses' form.code %}" class="link">Submissions</a></span>
+            <span class="col-4 navigation"><a href = "{% url 'lobby' %}" class="link">Room</a></span>
+            
             {% else %}
             <span class="col-6 navigation active">Questions</span>
             <span class="col-6 navigation"><a href = "{% url 'responses' form.code %}" class="link">Submissions</a></span>
+            <span class="col-4 navigation"><a href = "{% url 'lobby' %}" class="link">Room</a></span>
+            
             {% endif %}
         </div>
     </div>

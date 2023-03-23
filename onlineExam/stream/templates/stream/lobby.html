@@ -13,12 +13,19 @@
           
         </div>
         <div id = 'n' data-value = '{{usr_name}}'> </div>
+        <!-- <div id = 'n' data-value = 'haha'> </div> -->
+        
         <form id="form">
             <div class="field-wrapper">
 
                 <div class="form-field">
                     <label>Room:</label>
-                    <input name="room" placeholder="Enter exam room name"  style="text-transform:uppercase"/>
+                    <input name="room" placeholder="Enter exam room name"  />
+                </div>
+
+                <div class="form-field">
+                    <label>Form URL:</label>
+                    <input name="formurl" placeholder="Enter form url"  />
                 </div>
 
                 <div class="form-field">
@@ -34,10 +41,10 @@
     let uname = document.getElementById('n')
     let handleSubmit = async (e) => {
         e.preventDefault()
-        let room = e.target.room.value.toUpperCase()
+        let room = e.target.room.value
         // let name = e.target.name.value
         let name = uname.getAttribute('data-value')
-
+        let formurl = e.target.formurl.value
         let response = await fetch(`/get_token/?channel=${room}`)
         let data = await response.json()
 
@@ -48,6 +55,7 @@
         sessionStorage.setItem('token', token)
         sessionStorage.setItem('room', room)
         sessionStorage.setItem('name', name)
+        sessionStorage.setItem('formurl', formurl)
 
         window.open('/room/', '_self')
     }
