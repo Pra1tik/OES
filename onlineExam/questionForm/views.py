@@ -6,6 +6,37 @@ import json
 import random
 import string
 
+
+#for calculating subjective marks
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+def calculate_similarity(student_answer, teacher_answer, marks = 10):
+    # Tokenize and lemmatize the answers
+    lemmatizer = WordNetLemmatizer()
+    stop_words = set(stopwords.words("english"))
+    student_tokens = [lemmatizer.lemmatize(token.lower()) for token in word_tokenize(student_answer) if token.lower() not in stop_words]
+    teacher_tokens = [lemmatizer.lemmatize(token.lower()) for token in word_tokenize(teacher_answer) if token.lower() not in stop_words]
+    
+    # Convert the lemmatized tokens to strings
+    student_str = " ".join(student_tokens)
+    teacher_str = " ".join(teacher_tokens)
+    
+    # Calculate the TF-IDF vectors
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform([student_str, teacher_str])
+    
+    # Calculate the cosine similarity score
+    cosine_sim = cosine_similarity(tfidf_matrix)[0, 1]
+    
+    # Convert the similarity score to marks between 0 and 10
+    similarity_marks = round(cosine_sim * marks, 2)
+    
+    return similarity_marks
+
 # Create your views here.
 
 def index(request): #TODO:only teacher
@@ -503,7 +534,8 @@ def response(request, code, response_code):
         for i in responseInfo.response.all():
             #TODO:
             if i.answer_to.question_type == "short" or i.answer_to.question_type == "paragraph":
-                if i.answer == i.answer_to.answer_key: score += i.answer_to.score
+                marks = calculate_similarity(i.answer_to.answer_key,i.answer, i.answer_to.score)
+                if marks>0: score += marks
             elif i.answer_to.question_type == "multiple choice":
                 answerKey = None
                 for j in i.answer_to.choices.all():
