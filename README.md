@@ -5,6 +5,32 @@ The system focuses on maintaining exam integrity through a controlled kiosk envi
 
 ---
 
+## Running the Project
+
+### Prerequisites
+- Python 3.x
+- pip
+
+### Steps
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+# Windows
+venv\Scripts\activate
+# macOS / Linux
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the project
+python manage.py runserver
+
+Project should be running in http://localhost:8000
+
+
 ## Features
 
 ### Teacher Panel
