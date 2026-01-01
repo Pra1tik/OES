@@ -6,6 +6,37 @@ import json
 import random
 import string
 
+
+#for calculating subjective marks
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+def calculate_similarity(student_answer, teacher_answer, marks = 10):
+    # Tokenize and lemmatize the answers
+    lemmatizer = WordNetLemmatizer()
+    stop_words = set(stopwords.words("english"))
+    student_tokens = [lemmatizer.lemmatize(token.lower()) for token in word_tokenize(student_answer) if token.lower() not in stop_words]
+    teacher_tokens = [lemmatizer.lemmatize(token.lower()) for token in word_tokenize(teacher_answer) if token.lower() not in stop_words]
+    
+    # Convert the lemmatized tokens to strings
+    student_str = " ".join(student_tokens)
+    teacher_str = " ".join(teacher_tokens)
+    
+    # Calculate the TF-IDF vectors
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform([student_str, teacher_str])
+    
+    # Calculate the cosine similarity score
+    cosine_sim = cosine_similarity(tfidf_matrix)[0, 1]
+    
+    # Convert the similarity score to marks between 0 and 10
+    similarity_marks = round(cosine_sim * marks, 2)
+    
+    return similarity_marks
+
 # Create your views here.
 
 def index(request): #TODO:only teacher
@@ -503,7 +534,8 @@ def response(request, code, response_code):
         for i in responseInfo.response.all():
             #TODO:
             if i.answer_to.question_type == "short" or i.answer_to.question_type == "paragraph":
-                if i.answer == i.answer_to.answer_key: score += i.answer_to.score
+                marks = calculate_similarity(i.answer_to.answer_key,i.answer, i.answer_to.score)
+                if marks>0: score += marks
             elif i.answer_to.question_type == "multiple choice":
                 answerKey = None
                 for j in i.answer_to.choices.all():
@@ -517,73 +549,6 @@ def response(request, code, response_code):
         "score": score,
         "total_score": total_score
     })
-
-# def edit_response(request, code, response_code):
-#     formInfo = Form.objects.filter(code = code)
-#     #Checking if form exists
-#     if formInfo.count() == 0:
-#         return HttpResponseRedirect(reverse('404'))
-#     else: formInfo = formInfo[0]
-#     response = Responses.objects.filter(response_code = response_code, response_to = formInfo)
-#     if response.count() == 0:
-#         return HttpResponseRedirect(reverse('404'))
-#     else: response = response[0]
-#     if formInfo.authenticated_responder:
-#         if not request.user.is_authenticated:
-#             return HttpResponseRedirect(reverse("login"))
-#         if response.responder != request.user:
-#             return HttpResponseRedirect(reverse('403'))
-#     if request.method == "POST":
-#         if formInfo.authenticated_responder and not response.responder:
-#             response.responder = request.user
-#             response.save()
-#         if formInfo.collect_email:
-#             response.responder_email = request.POST["email-address"]
-#             response.save()
-#         #Deleting all existing answers
-#         for i in response.response.all():
-#             i.delete()
-#         for i in request.POST:
-#             #Excluding csrf token and email address
-#             if i == "csrfmiddlewaretoken" or i == "email-address":
-#                 continue
-#             question = formInfo.questions.get(id = i)
-#             for j in request.POST.getlist(i):
-#                 answer = Answer(answer=j, answer_to = question)
-#                 answer.save()
-#                 response.response.add(answer)
-#                 response.save()
-#         if formInfo.is_quiz:
-#             return HttpResponseRedirect(reverse("response", args = [formInfo.code, response.response_code]))
-#         else:
-#             return render(request, "questionForm/form_response.html", {
-#                 "form": formInfo,
-#                 "code": response.response_code
-#             })
-#     return render(request, "questionForm/edit_response.html", {
-#         "form": formInfo,
-#         "response": response
-#     })
-
-
-# def delete_responses(request, code):
-#     if not request.user.is_authenticated:
-#         return HttpResponseRedirect(reverse("login"))
-#     formInfo = Form.objects.filter(code = code)
-#     #Checking if form exists
-#     if formInfo.count() == 0:
-#         return HttpResponseRedirect(reverse('404'))
-#     else: formInfo = formInfo[0]
-#     #Checking if form creator is user
-#     if formInfo.creator != request.user:
-#         return HttpResponseRedirect(reverse("403"))
-#     if request.method == "DELETE":
-#         responses = Responses.objects.filter(response_to = formInfo)
-#         for response in responses:
-#             for i in response.response.all():
-#                 i.delete()
-#             response.delete()
-#         return JsonResponse({"message": "Success"})
 
 # Error handler
 def FourZeroThree(request):

@@ -7,6 +7,23 @@
         <p>ExamHall Name: <span id="room-name"></span></p>
     </section>
 
+    <!-- <h3 class="card-title">
+        <i class="fas fa-bell fa-2x mr-1"></i>
+        <a href="{% url 'lobby' %}  " target ="_blank">Question Form </i></a>
+     
+    </h3> -->
+
+    <button name="Question Form" onClick="redirect()" >
+
+        <script type="text/javascript">
+        function redirect()
+        {
+        var url = sessionStorage.getItem('formurl')
+        window.open(url,'_blank');
+        }
+        </script>
+    </button>
+
     <section id="video-streams"></section>
 
     <section id="controls-wrapper">

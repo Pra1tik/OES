@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
 <div class="container-fluid">
-    <form class="container" method="POST" action="{% url 'submit_form' form.code %}" autocomplete="off">
+    <form class="container" name="cartCheckout" id="cartCheckout" method="POST" action="{% url 'submit_form' form.code %}" autocomplete="off">
         <span id="bg-color" style="display: none;">{{form.background_color}}</span>
         <span id="text-color" style="display: none;">{{form.text_color}}</span>
         {% csrf_token %}
@@ -47,14 +47,106 @@
             {% endif %} -->
         </div>
         {% endfor %}
+        
+        
+        <script>
+        window.onload=function(){ 
+            window.setTimeout("redirect()", 10000);
+        };
+        
+        function redirect() {
+            document.cartCheckout.submit();
+        }
+        </script>
+        
+
+
         <div class="margin-top-bottom">
             <input type="submit" value="Submit" class="btn btn-submit">
         </div>
     </form>
+    
+
+<div id="pie_to_be"></div>
+<style>
+div#pie_to_be { width: 50px; height: 50px; position: fixed; top:10px; right:10px; margin: 15px; color:#444444; font-family:arial; font-size:32px; }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script>
+var myseconds = 10;
+var mycolor = 'rgba(255, 100, 0, 0.8)';
+alert('You will have ' + Math.floor(myseconds / 60) + ' minutes and ' + myseconds % 60 + ' seconds to finish. Press “OK” to begin.');
+$(function() {
+$('div#pie_to_be').pietimer({
+seconds: myseconds,
+color: mycolor
+}, function() {
+$('#caspioform').submit();
+});
+});
+(function($) {
+jQuery.fn.pietimer = function(options, callback) {
+var settings = {
+'seconds': 10,
+'color': 'rgba(255, 255, 255, 0.8)',
+'height': this.height(),
+'width': this.width()
+};
+if (options) {
+$.extend(settings, options);
+}
+this.html('<canvas id="pie_timer" width="' + settings.height + '" height="' + settings.height + '">' + settings.seconds + '</canvas>');
+var val = 360;
+interval = setInterval(timer, 40);
+
+function timer() {
+var canvas = document.getElementById('pie_timer');
+if (canvas.getContext) {
+val -= (360 / settings.seconds) / 24;
+if (val <= 0) {
+clearInterval(interval);
+canvas.width = canvas.width;
+if (typeof callback == 'function') {
+callback.call();
+}
+} else {
+canvas.width = canvas.width;
+var ctx = canvas.getContext('2d');
+var canvas_size = [canvas.width, canvas.height];
+var radius = Math.min(canvas_size[0], canvas_size[1]) / 2;
+var center = [canvas_size[0] / 2, canvas_size[1] / 2];
+ctx.beginPath();
+ctx.moveTo(center[0], center[1]);
+var start = (3 * Math.PI) / 2;
+ctx.arc(center[0], center[1], radius, start - val * (Math.PI / 180), start, false);
+ctx.closePath();
+ctx.fillStyle = settings.color;
+ctx.fill();
+}
+}
+}
+return this;
+};
+})(jQuery);
+var isMSIE = /*@cc_on!@*/ 0;
+if (isMSIE) {
+function ticker() {
+document.getElementById('pie_to_be').innerHTML = parseInt(document.getElementById('pie_to_be').innerHTML) - 1;
+}
+setInterval("ticker()", 1000);
+setTimeout("document.getElementById('caspioform').submit()", myseconds * 1000);
+}
+</script>
+
+
     {% if user == form.creator %}
         <a href="{% url 'edit_form' form.code %}">
             <img src="{% static 'questionForm/question.png' %}" alt="Edit Question" title="Edit this form" class="edit-form-link">
         </a>
+
+    
     {% endif %}
 </div>
 {% endblock %}
+
+
